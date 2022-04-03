@@ -1,6 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
-
+const exphbs = require('express-handlebars')
 const dotenv = require("dotenv");
 dotenv.config()
 
@@ -11,6 +11,9 @@ mongoose.connect(process.env.MONGODB_URI,{ useNewUrlParser: true, useUnifiedTopo
 
 const db = mongoose.connection
 
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
+app.set('view engine', 'handlebars')
+
 db.on('error', () => {
   console.log('mongodb error!')
 })
@@ -19,7 +22,7 @@ db.once('open', () => {
   console.log('mongodb connected!')
 })
 app.get('/', (req, res) => {
-  res.send('hi')
+  res.render('index')
 })
 
 app.listen(port, ()=> {
