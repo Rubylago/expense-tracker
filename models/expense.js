@@ -9,7 +9,11 @@ const ExpenseSchema = new Schema({
     type: Number, required: true 
   },
   date:{ 
-    type: Date 
+    type: String, 
+    default: function(){
+      const date = new Date()
+      return date.toISOString().split('T')[0]
+    }
   },
   // userId: { 
   //   type: Schema.Types.ObjectId,

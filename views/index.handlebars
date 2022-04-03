@@ -1,1 +1,54 @@
-<h1>index</h1>
+
+<div class="sort" > 
+  <div class="dropdown" style="display:flex; align-items:center; justify-content:center; height:100px; ">
+  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="width: 30%">
+    sort
+  </a>
+
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+  </ul>
+</div> </div>
+
+<div class="total">
+  <div class="row">
+    <div class="col-3"> 
+    </div>
+    <div class="col-3">
+      總金額：　 
+    </div>
+    <div class="col">
+      <h1>12345</h1>
+    </div>
+  </div>
+</div> 
+
+
+<div class="list">
+  <ul class="list-group">
+    {{#each expenses }}
+      <li class="list-group-item">
+        <div class="container">
+        <div class="row">
+          <div class="col-1">icon</div>
+          <div class="col"> 
+            <p> {{ this.name }} </p> 
+            <p> {{ this.date }} </p>
+          </div>
+          <div class="col">  {{ this.amount }}</div>
+          <div class="col-2">  <a href="/expenses/{{ this._id }}/edit">修改</a></div>
+          <div class="col-2">   
+            <form action="/expenses/{{ this._id }}?_method=DELETE" method="POST" style="display: inline-block;">
+              <button type="submit" class="btn btn-danger" >刪除</button>
+            </form> </div>
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+</div>
+
+<div style="display:flex; align-items:center; justify-content:center; height:100px;">
+  <a class="btn btn-primary" style="width: 30%;" href="/expenses/new" >新增支出</a>
+</div>
