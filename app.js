@@ -24,7 +24,7 @@ db.once('open', () => {
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
-
+app.use(express.urlencoded({ extended: true}))
 
 app.get('/', (req, res) => {
   ExpenseSchema.find()
@@ -33,6 +33,17 @@ app.get('/', (req, res) => {
     .catch(error => console.log(error))
 })
 
+app.get('/expenses/new', (req, res) => {
+  res.render('new')
+})
+
+app.post('/expenses', (req, res) => {
+  const data = req.body
+  console.log(data)
+  return ExpenseSchema.create( data )
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
 
 app.listen(port, ()=> {
   console.log(`this app is listen to http://localhost:${port}`)
