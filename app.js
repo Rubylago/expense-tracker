@@ -39,8 +39,24 @@ app.get('/expenses/new', (req, res) => {
 
 app.post('/expenses', (req, res) => {
   const data = req.body
-  console.log(data)
+  // console.log(data)
   return ExpenseSchema.create( data )
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
+
+app.get('/expenses/:id/edit', (req, res) => {
+  const id = req.params.id
+  return ExpenseSchema.findById(id)
+    .lean()
+    .then((expense) => res.render('edit', { expense }))
+    .catch(error => console.log(error))
+})
+
+app.post('/expenses/:id/edit', (req, res) => {
+  const _id = req.params.id
+  const data = req.body
+  return ExpenseSchema.findOneAndUpdate(_id, data)
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
