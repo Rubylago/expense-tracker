@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const dotenv = require("dotenv")
 dotenv.config()
+const methodOverride = require('method-override')
 
 const ExpenseSchema = require('./models/expense')
 
@@ -24,6 +25,7 @@ db.once('open', () => {
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
+app.use(methodOverride('_method'))
 app.use(express.urlencoded({ extended: true}))
 
 app.get('/', (req, res) => {
@@ -53,7 +55,7 @@ app.get('/expenses/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-app.post('/expenses/:id/edit', (req, res) => {
+app.put('/expenses/:id', (req, res) => {
   const _id = req.params.id
   const data = req.body
   return ExpenseSchema.findOneAndUpdate(_id, data)
