@@ -6,6 +6,7 @@ dotenv.config()
 const methodOverride = require('method-override')
 
 const ExpenseSchema = require('./models/expense')
+const { redirect } = require('express/lib/response')
 
 const app = express()
 const port = 3000
@@ -61,6 +62,13 @@ app.put('/expenses/:id', (req, res) => {
   const _id = req.params.id
   const data = req.body
   return ExpenseSchema.findOneAndUpdate(_id, data)
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
+
+app.delete('/expenses/:id', (req, res) => {
+  const _id = req.params.id
+  return ExpenseSchema.findByIdAndDelete(_id)
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
