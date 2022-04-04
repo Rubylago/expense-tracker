@@ -15,12 +15,12 @@ const ExpenseSchema = new Schema({
       return date.toISOString().split('T')[0]
     }
   },
-  userId: { 
-    type: Schema.Types.ObjectId,
-    ref: 'UserSchema',
-    index: true,
-    required: true
-    },
+  // userId: { 
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'UserSchema',
+  //   index: true,
+  //   required: true
+  //   },
   categoryId: { 
     type: Schema.Types.ObjectId,
     ref: 'CategorySchema',

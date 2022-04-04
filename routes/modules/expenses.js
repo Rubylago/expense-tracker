@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 
 const ExpenseSchema = require('../../models/expense')
+const CategorySchema = require('../../models/category')
+const categoryList = require('../../models/seeds/category.json')
 
 router.get('/new', (req, res) => {
   res.render('new')
@@ -10,9 +12,17 @@ router.get('/new', (req, res) => {
 router.post('/', (req, res) => {
   const data = req.body
   // console.log(data)
-  return ExpenseSchema.create( data )
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
+  const categoryName = req.body.categoryId
+  // console.log(categoryName)
+  return CategorySchema.findOne({ name: categoryName })
+    .then((category) => {
+      // console.log(category)
+      data.categoryId = category._id
+      // console.log('data', data)
+      return ExpenseSchema.create( data )
+        .then(() => res.redirect('/'))
+        .catch(error => console.log(error))
+    })
 })
 
 router.get('/:id/edit', (req, res) => {
@@ -26,9 +36,14 @@ router.get('/:id/edit', (req, res) => {
 router.put('/:id', (req, res) => {
   const _id = req.params.id
   const data = req.body
-  return ExpenseSchema.findOneAndUpdate(_id, data)
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
+  const categoryName = req.body.categoryId
+  return CategorySchema.findOne({ name: categoryName })
+    .then((category) => {
+      data.categoryId = category._id
+      return ExpenseSchema.findOneAndUpdate(_id, data)
+        .then(() => res.redirect('/'))
+        .catch(error => console.log(error))
+    })
 })
 
 router.delete('/:id', (req, res) => {
