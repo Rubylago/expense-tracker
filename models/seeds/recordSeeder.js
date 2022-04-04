@@ -1,29 +1,15 @@
-const mongoose = require('mongoose')
+const db = require('../../config/mongoose')
 const ExpenseSchema = require('../expense')
 const UserSchema = require('../user')
 const CategorySchema = require('../category')
 
-const dotenv = require("dotenv");
-dotenv.config()
-
-mongoose.connect(process.env.MONGODB_URI,{ useNewUrlParser: true, useUnifiedTopology: true })
-
-
-const db = mongoose.connection
 const SEED_USER = {
   name: 'root',
   email: 'root@example.com',
   password: '12345678'
 }
 
-db.on('error', () => {
-  console.log('mongodb error!')
-})
-
 db.once('open', () => {
-  console.log('mongodb connected!')
-
-
   return Promise.all(Array.from(
     { length: 5 },
     (_, i) => {
@@ -31,7 +17,7 @@ db.once('open', () => {
       return ExpenseSchema.create({ name: `name${i}`, amount: expense})
     }
   )).then(() => {
-    console.log('done.')
+    console.log('recordSeeder done.')
     process.exit()
   })
 })
