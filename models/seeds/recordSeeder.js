@@ -2,22 +2,13 @@ const db = require('../../config/mongoose')
 const ExpenseSchema = require('../expense')
 const UserSchema = require('../user')
 const CategorySchema = require('../category')
+const categoryList = require('./category.json')
 
 const SEED_USER = {
   name: 'root',
   email: 'root@example.com',
   password: '12345678'
 }
-
-const CATEGORY = {
-  家居物業: "https://fontawesome.com/icons/home?style=solid",
-  交通出行: "https://fontawesome.com/icons/shuttle-van?style=solid",
-  休閒娛樂: "https://fontawesome.com/icons/grin-beam?style=solid",
-  餐飲食品: "https://fontawesome.com/icons/utensils?style=solid",
-  其他: "https://fontawesome.com/icons/pen?style=solid"
-}
-
-const category = Object.entries(CATEGORY)  // ['家居物業', 'https://fontawesome.com/icons/home?style=solid'],...
 
 db.once('open', () => {
   UserSchema.create({
@@ -27,7 +18,7 @@ db.once('open', () => {
   })
   .then(user => {
     const userId = user._id
-    return CategorySchema.create({ name: category[0][0], icon: category[0][1]})
+    return CategorySchema.create({ name: categoryList[0].name, icon: categoryList[0].icon })
       .then(category => {
         const categoryId = category._id
         console.log('categoryId')
