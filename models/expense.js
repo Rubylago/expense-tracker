@@ -15,22 +15,22 @@ const ExpenseSchema = new Schema({
       return date.toISOString().split('T')[0]
     }
   },
-  // userId: { 
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'UserSchema',
-  //   index: true,
-  //   required: true
-  //   },
-  // categoryId: { 
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'CategorySchema',
-  //   index: true,
-  //   required: true
-  //   },
-  //   createdAt:{ 
-  //   type: Date,
-  //   default: Date.now
-  // }
+  userId: { 
+    type: Schema.Types.ObjectId,
+    ref: 'UserSchema',
+    index: true,
+    required: true
+    },
+  categoryId: { 
+    type: Schema.Types.ObjectId,
+    ref: 'CategorySchema',
+    index: true,
+    required: true
+    },
+  createdAt:{ 
+  type: Date,
+  default: Date.now
+  }
 })
 
 module.exports = mongoose.model('ExpenseSchema', ExpenseSchema)
