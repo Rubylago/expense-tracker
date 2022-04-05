@@ -10,6 +10,7 @@ const SEED_USER = {
   password: '12345678'
 }
 
+// 其實只要自己寫好seeder載入就可以了? 
 db.once('open', () => {
   UserSchema.create({
       name: SEED_USER.name,
@@ -18,10 +19,10 @@ db.once('open', () => {
   })
   .then(user => {
     const userId = user._id
-    return CategorySchema.create({ name: categoryList[0].name, icon: categoryList[0].icon })
+    return CategorySchema.findOne({ name: categoryList[0].name })
       .then(category => {
         const categoryId = category._id
-        console.log('categoryId')
+        // console.log('categoryId')
         return Promise.all(Array.from(
         { length: 5 },
         (_, i) => {

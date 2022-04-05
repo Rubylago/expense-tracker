@@ -11,14 +11,10 @@ router.get('/new', (req, res) => {
 
 router.post('/', (req, res) => {
   const data = req.body
-  // console.log(data)
   const categoryName = req.body.categoryId
-  // console.log(categoryName)
   return CategorySchema.findOne({ name: categoryName })
     .then((category) => {
-      // console.log(category)
       data.categoryId = category._id
-      // console.log('data', data)
       return ExpenseSchema.create( data )
         .then(() => res.redirect('/'))
         .catch(error => console.log(error))
