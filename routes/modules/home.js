@@ -1,5 +1,4 @@
 const express = require('express')
-const category = require('../../models/category')
 const router = express.Router()
 
 const CategorySchema = require('../../models/category')
