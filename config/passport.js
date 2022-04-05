@@ -11,10 +11,10 @@ module.exports = app => {
     UserSchema.findOne({ email })
       .then(user => {
         if (!user) {
-          return done(null, false, { message: 'That email is not registered!' })
+          return done(null, false)
         }
         if (user.password !== password) {
-          return done(null, false, { message: 'Email or Password incorrect.' })
+          return done(null, false)
         }
         return done(null, user)
       })
