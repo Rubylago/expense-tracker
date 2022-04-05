@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 
 const CategorySchema = require('../../models/category')
-const expense = require('../../models/expense')
 const ExpenseSchema = require('../../models/expense')
 
 router.get('/:sort', async (req, res) => {

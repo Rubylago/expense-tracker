@@ -42,15 +42,14 @@ router.put('/:id', async(req, res) => {
       expense.name = data.name
       expense.amount = data.amount
       expense.categoryId = data.categoryId
-      console.log(expense)
       return expense.save()
     }) 
     .then(() => res.redirect('/'))
     .catch(err => console.error(err))
 
-  // 遇到問題： 如果用下面 findOneAndUpdate 會出現BUG 
+  // 遇到問題： 如果用下面 findOneAndUpdate 會出現奇怪的BUG 
   // 現有列表中若有一條以上資料包含"餐飲"類別，修改隨意一條類別非餐飲的expense名稱從"name01"改成"餐飲"
-  // 會直接新增，原始修改的資料仍然存在
+  // 會直接新增一筆資料，原始修改的資料仍然存在
   // 好像其他選項都不會有XD
 
   // return ExpenseSchema.findOneAndUpdate(_id, data, {new: true})
