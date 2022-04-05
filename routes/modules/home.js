@@ -7,7 +7,8 @@ const ExpenseSchema = require('../../models/expense')
 
 // icon image : expenses[0].categoryId.icon 
 router.get('/', (req, res) => {
-    return ExpenseSchema.find()
+  const userId = req.user._id
+    return ExpenseSchema.find({ userId })
     .populate('categoryId')
     .lean()
     .sort({ _id: 'asc' })

@@ -10,11 +10,13 @@ router.get('/new', (req, res) => {
 
 // create
 router.post('/', (req, res) => {
+  const userId = req.user._id
   const data = req.body
   const categoryName = req.body.categoryId
   return CategorySchema.findOne({ name: categoryName })
     .then((category) => {
       data.categoryId = category._id
+      data.userId = userId
       return ExpenseSchema.create( data )
         .then(() => res.redirect('/'))
         .catch(error => console.log(error))
@@ -23,8 +25,9 @@ router.post('/', (req, res) => {
 
 // edit page
 router.get('/:id/edit', (req, res) => {
-  const id = req.params.id
-  return ExpenseSchema.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return ExpenseSchema.findOne({ _id, userId })
     .lean()
     .then((expense) => res.render('edit', { expense }))
     .catch(error => console.log(error))
@@ -32,12 +35,13 @@ router.get('/:id/edit', (req, res) => {
 
 // edit
 router.put('/:id', async(req, res) => {
+  const userId = req.user._id
   const _id = req.params.id
   const data = req.body
   const categoryName = req.body.categoryId
   const category = await CategorySchema.findOne({ name: categoryName }).lean()
   data.categoryId = category._id
-  return ExpenseSchema.findById(_id)
+  return ExpenseSchema.findOne({ _id, userId })
     .then(expense => {
       expense.name = data.name
       expense.amount = data.amount
@@ -59,8 +63,10 @@ router.put('/:id', async(req, res) => {
 
 // delete
 router.delete('/:id', (req, res) => {
+  const userId = req.user._id
   const _id = req.params.id
-  return ExpenseSchema.findByIdAndDelete(_id)
+  return ExpenseSchema.findOne({ _id, userId })
+    .then(data => data.remove())
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
