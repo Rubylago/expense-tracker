@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
     return ExpenseSchema.find()
     .populate('categoryId')
     .lean()
+    .sort({ _id: 'asc' })
     .then(expenses => {
-      // console.log(expenses[0].categoryId.icon )
       return  res.render('index', { expenses })
     })
     .catch(error => console.log(error))
