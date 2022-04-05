@@ -39,4 +39,9 @@ router.post('/register', (req, res) => {
   // 新註冊>新增資料庫 redirect:"/"
 })
 
+router.get('/logout', (req, res) => {
+  req.logOut()
+  res.redirect('/users/login')
+})
+
 module.exports = router
