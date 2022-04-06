@@ -12,7 +12,7 @@ router.get('/new', (req, res) => {
 router.post('/', (req, res) => {
   const userId = req.user._id
   const data = req.body
-  const categoryName = req.body.categoryId
+  const categoryName = req.body.categoryName
   return CategorySchema.findOne({ name: categoryName })
     .then((category) => {
       data.categoryId = category._id
@@ -38,7 +38,7 @@ router.put('/:id', async(req, res) => {
   const userId = req.user._id
   const _id = req.params.id
   const data = req.body
-  const categoryName = req.body.categoryId
+  const categoryName = req.body.categoryName
   const category = await CategorySchema.findOne({ name: categoryName }).lean()
   data.categoryId = category._id
   return ExpenseSchema.findOne({ _id, userId })
