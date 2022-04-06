@@ -3,6 +3,7 @@ const router = express.Router()
 
 const ExpenseSchema = require('../../models/expense')
 const CategorySchema = require('../../models/category')
+const category = require('../../models/category')
 
 router.get('/new', (req, res) => {
   res.render('new')
@@ -29,8 +30,19 @@ router.get('/:id/edit', (req, res) => {
   const _id = req.params.id
   return ExpenseSchema.findOne({ _id, userId })
     .lean()
-    .then((expense) => res.render('edit', { expense }))
-    .catch(error => console.log(error))
+    .then(expense => {
+      return CategorySchema.find({},{name:1, _id:1})
+        .lean()
+        .then(categories => {
+          const categorySelect = categories.find((category) => { 
+            return category._id.toString() === expense.categoryId.toString() 
+          })
+          categories = categories.filter(item => {
+            return item.name !== categorySelect.name
+          })
+          return res.render('edit', { expense, categories, categorySelect: categorySelect.name })
+        })
+    })
 })
 
 // edit
