@@ -1,36 +1,45 @@
+const bcrypt = require('bcryptjs')
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 const db = require('../../config/mongoose')
 const ExpenseSchema = require('../expense')
 const UserSchema = require('../user')
 const CategorySchema = require('../category')
-const categoryList = require('./category.json')
+const categoryList = require('./category.json').results
 
 const SEED_USER = {
   name: 'root',
   email: 'root@example.com',
-  password: '12345678'
+  password: '12345678',
+  categories: categoryList  // [{...},{...}]
 }
 
-// 其實只要自己寫好seeder載入就可以了? 
 db.once('open', () => {
-  UserSchema.create({
+  bcrypt
+  .genSalt(10)
+  .then(salt => bcrypt.hash(SEED_USER.password, salt))
+  .then(hash => UserSchema.create({
       name: SEED_USER.name,
       email: SEED_USER.email,
-      password: SEED_USER.password
-  })
-  .then(user => {
+      password: hash
+    })
+  )
+  .then((user) => {
     const userId = user._id
-    return CategorySchema.findOne({ name: categoryList[0].name })
-      .then(category => {
-        const categoryId = category._id
-        // console.log('categoryId')
-        return Promise.all(Array.from(
-        { length: 5 },
-        (_, i) => {
-          const expense = Math.floor(Math.random()*100)+1 
-          return ExpenseSchema.create({ name: `name${i}`, amount: expense, categoryId, userId })
-          })
-        )
-      })  
+    return Promise.all(Array.from((categoryList), category => {
+      const expense = Math.floor(Math.random()*100)+1 
+      return CategorySchema.findOne({ name: category.name })
+      .lean()
+      .then( category => {
+        return ExpenseSchema.create({ 
+        name: category.name,
+        amount: expense, 
+        userId, 
+        categoryId: category._id
+        })
+      })
+    }))
   })
   .then(() => {
     console.log('recordSeeder done.')
