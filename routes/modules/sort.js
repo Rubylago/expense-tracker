@@ -7,14 +7,17 @@ const ExpenseSchema = require('../../models/expense')
 router.get('/:sort', async (req, res) => {
   const userId = req.user._id
   const sort = req.params.sort
-  const categories = await CategorySchema.find({ name: sort }).lean()
-  const category_id = categories[0]._id
+  const category = await CategorySchema.findOne({ name: sort }).lean()
 
-  return ExpenseSchema.find({ categoryId: category_id, userId })
+  return ExpenseSchema.find({ categoryId:  category._id, userId })
     .populate('categoryId')  
     .lean()
     .then(expenses => {
-      return res.render('index', { expenses })
+      let totalAmount = 0
+      Array.from(expenses, expense => {
+        totalAmount += Number(expense.amount)
+      })
+      return res.render('index', { expenses, totalAmount })
     })
     .catch(error => console.log(error))
 })
